@@ -8,5 +8,7 @@ use Foo\TestMessage;
 $m = new TestMessage([]);
 
 $m->setTrueOptionalString(null);
+$m->setTrueOptionalBool(null);
 
 var_dump($m->getTrueOptionalString());
+var_dump($m->getTrueOptionalBool());

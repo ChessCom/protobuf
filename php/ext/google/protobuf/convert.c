@@ -286,6 +286,9 @@ static bool to_double(zval* php_val, double* dbl) {
 
 static bool to_bool(zval* from, bool* to) {
   switch (Z_TYPE_P(from)) {
+    case IS_NULL:
+      *to = false;
+      return true;
     case IS_TRUE:
       *to = true;
       return true;
