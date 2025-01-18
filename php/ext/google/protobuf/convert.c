@@ -211,6 +211,11 @@ static bool buftoint64(const char* ptr, const char* end, int64_t* val) {
 }
 
 static void throw_conversion_exception(const char* to, const zval* zv) {
+  if (Z_TYPE_P(zv) == IS_NULL) {
+      zend_throw_exception_ex(NULL, 0, "Cannot convert NULL to %s", to);
+      return;
+  }
+
   zval tmp;
   ZVAL_COPY(&tmp, zv);
   convert_to_string(&tmp);
@@ -370,7 +375,12 @@ bool Convert_PhpToUpb(zval* php_val, upb_MessageValue* upb_val, TypeInfo type,
       return to_bool(php_val, &upb_val->bool_val);
     case kUpb_CType_String:
     case kUpb_CType_Bytes: {
-      if (!to_string(php_val)) return false;
+      if (Z_TYPE_P(php_val) == IS_NULL) {
+        upb_val->str_val = upb_StringView_FromDataAndSize(NULL, 0);
+        return true;
+      } else if (!to_string(php_val)) {
+        return false;
+      }
 
       char* ptr = Z_STRVAL_P(php_val);
       size_t size = Z_STRLEN_P(php_val);
