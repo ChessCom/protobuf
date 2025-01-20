@@ -1875,8 +1875,8 @@ static upb_StringView jsondec_mask(jsondec* d, const char* buf,
     if (ch >= 'A' && ch <= 'Z') {
       *out++ = '_';
       *out++ = ch + 32;
-    } else if (ch == '_') {
-      jsondec_err(d, "field mask may not contain '_'");
+    // } else if (ch == '_') {
+    //   jsondec_err(d, "field mask may not contain '_'");
     } else {
       *out++ = ch;
     }

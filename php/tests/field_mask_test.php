@@ -8,7 +8,7 @@ use Google\Protobuf\FieldMask;
 $m1 = new FieldMask();
 $m2 = new FieldMask();
 
-$m1->setPaths(['phoneNumber', 'emailAddress']);
+$m1->setPaths(['phoneNumber', 'email_address']);
 
 $m2->mergeFromJsonString($m1->serializeToJsonString());
 
