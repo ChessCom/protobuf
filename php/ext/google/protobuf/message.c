@@ -85,57 +85,12 @@ static void Message_dtor(zend_object* obj) {
 }
 
 /**
- * get_field()
+ * lookup_field()
  *
  * Helper function to look up a field given a member name (as a string).
  */
-static const upb_FieldDef* get_field(Message* msg, zend_string* member) {
-  //fprintf(stderr, "get_field\n");
-
+static const upb_FieldDef* lookup_field(Message* msg, zend_string* member) {
   if (!msg || !msg->desc || !msg->desc->msgdef) {
-    // zend_string* class_name = msg ? msg->std.ce->name : NULL;
-    // zend_class_entry* parent_ce = msg && msg->std.ce->parent ? msg->std.ce->parent : NULL;
-
-    // fprintf(stderr,
-    //     "get_field: Invalid msg or desc: msg=%p, desc=%p\n",
-    //     (void*)msg, (void*)msg->desc
-    // );
-
-    // if (class_name) {
-    //     fprintf(stderr, "Class name: %s\n", ZSTR_VAL(class_name));
-    // } else {
-    //     fprintf(stderr, "Class name: (null)\n");
-    // }
-
-    // if (parent_ce) {
-    //     fprintf(stderr, "Parent class: %s\n", ZSTR_VAL(parent_ce->name));
-    // } else {
-    //     fprintf(stderr, "Parent class: (none)\n");
-    // }
-
-    // // Print the full stack trace
-    // fprintf(stderr, "Full stack trace:\n");
-    // const zend_execute_data* frame = EG(current_execute_data);
-    // while (frame) {
-    //     const zend_function* func = frame->func;
-    //     const char* function_name = func->common.function_name
-    //                                     ? ZSTR_VAL(func->common.function_name)
-    //                                     : "(unknown)";
-    //     const char* class_name = func->common.scope
-    //                                     ? ZSTR_VAL(func->common.scope->name)
-    //                                     : "(none)";
-    //     const char* filename = func->op_array.filename
-    //                                ? ZSTR_VAL(func->op_array.filename)
-    //                                : "(unknown)";
-    //     uint32_t line = frame->opline ? frame->opline->lineno : 0;
-
-    //     fprintf(stderr, "  at %s::%s() in %s on line %u\n",
-    //             class_name, function_name, filename, line);
-
-    //     // Move to the previous frame
-    //     frame = frame->prev_execute_data;
-    // }
-
     zend_throw_exception_ex(NULL, 0, "Message is uninitialized or corrupted.");
     return NULL;
   }
@@ -143,10 +98,27 @@ static const upb_FieldDef* get_field(Message* msg, zend_string* member) {
   const upb_MessageDef* m = msg->desc->msgdef;
   const upb_FieldDef* f = upb_MessageDef_FindFieldByNameWithSize(
       m, ZSTR_VAL(member), ZSTR_LEN(member));
+  
+  if (!f) {
+    return NULL;
+  }
+
+  return f;
+}
+
+/**
+ * get_field()
+ *
+ * Helper function to get up a field given a member name (as a string).
+ * if the field is not found, a PHP warning is emitted and NULL is returned.
+ */
+static const upb_FieldDef* get_field(Message* msg, zend_string* member) {
+  const upb_FieldDef* f = lookup_field(msg, member);
 
   if (!f) {
-    zend_throw_exception_ex(NULL, 0, "No such property %s.",
-                            ZSTR_VAL(msg->desc->class_entry->name));
+    php_error(E_WARNING, "Undefined property: %s::$%s",
+                            ZSTR_VAL(msg->desc->class_entry->name),
+                            ZSTR_VAL(member));
   }
 
   return f;
@@ -291,15 +263,11 @@ static int Message_compare_objects(zval* m1, zval* m2) {
 static int Message_has_property(zend_object* obj, zend_string* member,
                                 int has_set_exists, void** cache_slot) {
   Message* intern = (Message*)obj;
-  const upb_FieldDef* f = get_field(intern, member);
+  const upb_FieldDef* f = lookup_field(intern, member);
 
   if (!f) return 0;
 
-  if (!upb_FieldDef_HasPresence(f)) {
-    zend_throw_exception_ex(
-        NULL, 0,
-        "Cannot call isset() on field %s which does not have presence.",
-        upb_FieldDef_Name(f));
+  if (upb_FieldDef_IsOptional(f) && !upb_FieldDef_HasPresence(f)) {
     return 0;
   }
 
@@ -325,7 +293,7 @@ static int Message_has_property(zend_object* obj, zend_string* member,
 static void Message_unset_property(zend_object* obj, zend_string* member,
                                    void** cache_slot) {
   Message* intern = (Message*)obj;
-  const upb_FieldDef* f = get_field(intern, member);
+  const upb_FieldDef* f = lookup_field(intern, member);
 
   if (!f) return;
 
