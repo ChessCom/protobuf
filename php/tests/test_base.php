@@ -12,42 +12,6 @@ class TestBase extends \PHPUnit\Framework\TestCase
         TestUtil::setTestMessage($m);
     }
 
-    /**
-     * Polyfill for phpunit6.
-     */
-    static public function assertStringContains($needle, $haystack)
-    {
-        if (method_exists('\PHPUnit\Framework\TestCase', 'assertStringContainsString')) {
-            parent::assertStringContainsString($needle, $haystack);
-        } else {
-            parent::assertContains($needle, $haystack);
-        }
-    }
-
-    /**
-     * Polyfill for phpunit6.
-     */
-    static public function assertStringNotContains($needle, $haystack)
-    {
-        if (method_exists('\PHPUnit\Framework\TestCase', 'assertStringContainsString')) {
-            parent::assertStringNotContainsString($needle, $haystack);
-        } else {
-            parent::assertNotContains($needle, $haystack);
-        }
-    }
-
-    /**
-     * Polyfill for phpunit6.
-     */
-    static public function assertFloatEquals($expected, $actual, $delta)
-    {
-        if (method_exists('\PHPUnit\Framework\TestCase', 'assertEqualsWithDelta')) {
-            parent::assertEqualsWithDelta($expected, $actual, $delta);
-        } else {
-            parent::assertEquals($expected, $actual, '', $delta);
-        }
-    }
-
     public function setFields2(TestMessage $m)
     {
         TestUtil::setTestMessage2($m);
