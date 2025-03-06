@@ -10,19 +10,18 @@ local_repository(
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-local_repository(
-    name = "com_google_protobuf_examples",
-    path = "examples",
-)
-
 # Load common dependencies first to ensure we use the correct version
 load("//:protobuf_deps.bzl", "PROTOBUF_MAVEN_ARTIFACTS", "protobuf_deps")
 
 protobuf_deps()
 
-load("//:protobuf_extra_deps.bzl", "protobuf_extra_deps")
+load("@rules_java//java:rules_java_deps.bzl", "rules_java_dependencies")
 
-protobuf_extra_deps()
+rules_java_dependencies()
+
+load("@rules_java//java:repositories.bzl", "rules_java_toolchains")
+
+rules_java_toolchains()
 
 load("@bazel_features//:deps.bzl", "bazel_features_deps")
 
@@ -32,22 +31,18 @@ load("@rules_python//python:repositories.bzl", "py_repositories")
 
 py_repositories()
 
-load("@rules_python//python/pip_install:repositories.bzl", "pip_install_dependencies")
-
-pip_install_dependencies()
-
 # Bazel platform rules.
 http_archive(
     name = "platforms",
-    sha256 = "3a561c99e7bdbe9173aa653fd579fe849f1d8d67395780ab4770b1f381431d51",
+    sha256 = "218efe8ee736d26a3572663b374a253c012b716d8af0c07e842e82f238a0a7ee",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/platforms/releases/download/0.0.7/platforms-0.0.7.tar.gz",
-        "https://github.com/bazelbuild/platforms/releases/download/0.0.7/platforms-0.0.7.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/platforms/releases/download/0.0.10/platforms-0.0.10.tar.gz",
+        "https://github.com/bazelbuild/platforms/releases/download/0.0.10/platforms-0.0.10.tar.gz",
     ],
 )
 
 http_archive(
-    name = "com_google_googletest",
+    name = "googletest",
     sha256 = "7315acb6bf10e99f332c8a43f00d5fbb1ee6ca48c52f6b936991b216c586aaad",
     strip_prefix = "googletest-1.15.0",
     urls = [
@@ -55,7 +50,7 @@ http_archive(
     ],
 )
 
-load("@com_google_googletest//:googletest_deps.bzl", "googletest_deps")
+load("@googletest//:googletest_deps.bzl", "googletest_deps")
 
 googletest_deps()
 
@@ -70,7 +65,7 @@ rules_jvm_external_setup()
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 
 maven_install(
-    name = "protobuf_maven",
+    name = "maven",
     artifacts = PROTOBUF_MAVEN_ARTIFACTS,
     # For updating instructions, see:
     # https://github.com/bazelbuild/rules_jvm_external#updating-maven_installjson
@@ -81,9 +76,33 @@ maven_install(
     ],
 )
 
-load("@protobuf_maven//:defs.bzl", "pinned_maven_install")
-
+load("@maven//:defs.bzl", "pinned_maven_install")
 pinned_maven_install()
+
+maven_install(
+    name = "protobuf_maven",
+    artifacts = [
+        "com.google.caliper:caliper:1.0-beta-3",
+        "com.google.guava:guava-testlib:32.0.1-jre",
+        "com.google.testparameterinjector:test-parameter-injector:1.18",
+        "com.google.truth:truth:1.1.2",
+        "junit:junit:4.13.2",
+        "org.mockito:mockito-core:4.3.1",
+        "biz.aQute.bnd:biz.aQute.bndlib:6.4.0",
+        "info.picocli:picocli:4.6.3",
+    ],
+    # For updating instructions, see:
+    # https://github.com/bazelbuild/rules_jvm_external#updating-maven_installjson
+    maven_install_json = "//:maven_dev_install.json",
+    repositories = [
+        "https://repo1.maven.org/maven2",
+        "https://repo.maven.apache.org/maven2",
+    ],
+)
+
+load("@protobuf_maven//:defs.bzl", pinned_protobuf_maven_install = "pinned_maven_install")
+pinned_protobuf_maven_install()
+
 
 # For `cc_proto_blacklist_test` and `build_test`.
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
@@ -102,15 +121,11 @@ load("@build_bazel_apple_support//lib:repositories.bzl", "apple_support_dependen
 
 apple_support_dependencies()
 
-load("@rules_java//java:repositories.bzl", "rules_java_dependencies", "rules_java_toolchains")
-
-rules_java_dependencies()
-
-rules_java_toolchains()
-
-load("@rules_cc//cc:repositories.bzl", "rules_cc_dependencies")
+load("@rules_cc//cc:repositories.bzl", "rules_cc_dependencies", "rules_cc_toolchains")
 
 rules_cc_dependencies()
+
+rules_cc_toolchains()
 
 # For `kt_jvm_library`
 load("@rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories")
@@ -178,9 +193,9 @@ http_archive(
     name = "com_google_googleapis",
     build_file = "//benchmarks:BUILD.googleapis",
     patch_cmds = ["find google -type f -name BUILD.bazel -delete"],
-    sha256 = "d986023c3d8d2e1b161e9361366669cac9fb97c2a07e656c2548aca389248bb4",
-    strip_prefix = "googleapis-d81d0b9e6993d6ab425dff4d7c3d05fb2e59fa57",
-    urls = ["https://github.com/googleapis/googleapis/archive/d81d0b9e6993d6ab425dff4d7c3d05fb2e59fa57.zip"],
+    sha256 = "f5d1f45a03e608632084811a5870b4ebdf0b95edbe899e6448d337427d8f38dc",
+    strip_prefix = "googleapis-c414002bae922fc4577637a542e11fb9700af10f",
+    urls = ["https://github.com/googleapis/googleapis/archive/c414002bae922fc4577637a542e11fb9700af10f.zip"],
 )
 
 load("@system_python//:pip.bzl", "pip_parse")

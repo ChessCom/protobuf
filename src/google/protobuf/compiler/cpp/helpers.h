@@ -358,16 +358,29 @@ inline bool IsString(const FieldDescriptor* field) {
 }
 
 
+inline bool IsArenaStringPtr(const FieldDescriptor* field) {
+  return field->cpp_string_type() == FieldDescriptor::CppStringType::kString ||
+         field->cpp_string_type() == FieldDescriptor::CppStringType::kView;
+}
+
 bool IsProfileDriven(const Options& options);
 
 // Returns true if `field` is unlikely to be present based on PDProto profile.
-bool IsRarelyPresent(const FieldDescriptor* field, const Options& options);
+PROTOC_EXPORT bool IsRarelyPresent(const FieldDescriptor* field,
+                                   const Options& options);
 
 // Returns true if `field` is likely to be present based on PDProto profile.
 bool IsLikelyPresent(const FieldDescriptor* field, const Options& options);
 
-float GetPresenceProbability(const FieldDescriptor* field,
-                             const Options& options);
+absl::optional<float> GetPresenceProbability(const FieldDescriptor* field,
+                                             const Options& options);
+
+// GetFieldGroupPresenceProbability computes presence probability for a group of
+// fields. It uses the absence probability (easier to compute)
+// (1 - p1) * (1 - p2) * ... * (1 - pn), and in the end the aggregate presence
+// probability can be expressed as (1 - all_absent_probability).
+absl::optional<float> GetFieldGroupPresenceProbability(
+    const std::vector<const FieldDescriptor*>& fields, const Options& options);
 
 bool IsStringInliningEnabled(const Options& options);
 
@@ -444,10 +457,11 @@ VerifySimpleType ShouldVerifySimple(const Descriptor* descriptor);
 
 
 // Is the given message being split (go/pdsplit)?
-bool ShouldSplit(const Descriptor* desc, const Options& options);
+PROTOC_EXPORT bool ShouldSplit(const Descriptor* desc, const Options& options);
 
 // Is the given field being split out?
-bool ShouldSplit(const FieldDescriptor* field, const Options& options);
+PROTOC_EXPORT bool ShouldSplit(const FieldDescriptor* field,
+                               const Options& options);
 
 // Should we generate code that force creating an allocation in the constructor
 // of the given message?
@@ -478,7 +492,7 @@ bool HasStringPieceFields(const FileDescriptor* file, const Options& options);
 bool HasCordFields(const FileDescriptor* file, const Options& options);
 
 // Does the file have any map fields, necessitating the file to include
-// map_field_inl.h and map.h.
+// map_field.h and map.h.
 bool HasMapFields(const FileDescriptor* file);
 
 // Does this file have any enum type definitions?
