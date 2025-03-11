@@ -700,6 +700,16 @@ PHP_METHOD(Descriptor, getOneofDeclCount) {
 }
 
 /*
+ * Descriptor::getRealOneofDeclCount()
+ *
+ * Returns total number of oneofs, excluding synthetic oneofs.
+ */
+PHP_METHOD(Descriptor, getRealOneofDeclCount) {
+  Descriptor* intern = (Descriptor*)Z_OBJ_P(getThis());
+  RETURN_LONG(upb_MessageDef_RealOneofCount(intern->msgdef));
+}
+
+/*
  * Descriptor::getClass()
  *
  * Returns the name of the PHP class for this message.
@@ -718,6 +728,7 @@ static zend_function_entry Descriptor_methods[] = {
   PHP_ME(Descriptor, getFieldCount, arginfo_void, ZEND_ACC_PUBLIC)
   PHP_ME(Descriptor, getOneofDecl, arginfo_getByIndex, ZEND_ACC_PUBLIC)
   PHP_ME(Descriptor, getOneofDeclCount, arginfo_void, ZEND_ACC_PUBLIC)
+  PHP_ME(Descriptor, getRealOneofDeclCount, arginfo_void, ZEND_ACC_PUBLIC)
   PHP_ME(Descriptor, getPublicDescriptor, arginfo_void, ZEND_ACC_PUBLIC)
   ZEND_FE_END
 };

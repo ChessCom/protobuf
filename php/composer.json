@@ -29,10 +29,42 @@
     ]
   },
   "scripts": {
-    "test_c": "./generate_test_protos.sh && ./tests/compile_extension.sh && FORCE_C_EXT=1 php -dextension=ext/google/protobuf/modules/protobuf.so vendor/bin/phpunit",
-    "test_valgrind": "./generate_test_protos.sh && ./tests/compile_extension.sh && FORCE_C_EXT=1 ZEND_DONT_UNLOAD_MODULES=1 USE_ZEND_ALLOC=0 valgrind --leak-check=full --error-exitcode=1 php -dextension=ext/google/protobuf/modules/protobuf.so vendor/bin/phpunit",
-    "test": "./generate_test_protos.sh && vendor/bin/phpunit tests",
-    "aggregate_metadata_test": "./generate_test_protos.sh --aggregate_metadata && vendor/bin/phpunit tests"
+    "compile_extension": "./tests/compile_extension.sh",
+    "generate_test_protos": "./generate_test_protos.sh",
+    "generate_class_metadata_php": [
+      "@generate_test_protos",
+      "mkdir -p tmp/class-metadata",
+      "php bin/class-metadata.php -s src -o tmp/class-metadata/well-known-types-php.json"
+    ],
+    "generate_class_metadata_ext": [
+      "@generate_test_protos",
+      "mkdir -p tmp/class-metadata",
+      "php -dextension=ext/google/protobuf/modules/protobuf.so bin/class-metadata.php -s src -o tmp/class-metadata/well-known-types-ext.json"
+    ],
+    "phpunit": [
+      "vendor/bin/phpunit"
+    ],
+    "phpunit_ext": [
+      "USE_ZEND_ALLOC=0 ZEND_DONT_UNLOAD_MODULES=1 php -dextension=ext/google/protobuf/modules/protobuf.so vendor/bin/phpunit"
+    ],
+    "test": [
+      "@generate_test_protos",
+      "@phpunit"
+    ],
+    "test_c": [
+      "@compile_extension",
+      "@generate_test_protos",
+      "@phpunit_ext"
+    ],
+    "test_valgrind": [
+      "@compile_extension",
+      "@generate_test_protos",
+      "FORCE_C_EXT=1 ZEND_DONT_UNLOAD_MODULES=1 USE_ZEND_ALLOC=0 valgrind --leak-check=full --error-exitcode=1 php -dextension=ext/google/protobuf/modules/protobuf.so vendor/bin/phpunit"
+    ],
+    "aggregate_metadata_test": [
+      "./generate_test_protos.sh --aggregate_metadata",
+      "@phpunit"
+    ]
   },
   "config": {
     "process-timeout": 1200

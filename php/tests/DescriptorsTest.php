@@ -87,6 +87,7 @@ class DescriptorsTest extends TestBase
 
         $this->assertInstanceOf('\Google\Protobuf\OneofDescriptor', $desc->getOneofDecl(0));
         $this->assertSame(2, $desc->getOneofDeclCount());
+        $this->assertSame(2, $desc->getRealOneofDeclCount());
     }
 
     public function testDescriptorForIncludedMessage()
