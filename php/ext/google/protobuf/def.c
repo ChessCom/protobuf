@@ -159,6 +159,35 @@ static void EnumDescriptor_FromEnumDef(zval* val, const upb_EnumDef* m) {
 }
 
 /*
+ * EnumDescriptor::getClass()
+ *
+ * Returns PHP class name
+ */
+PHP_METHOD(EnumDescriptor, getClass) {
+  EnumDescriptor* intern = (EnumDescriptor*)Z_OBJ_P(getThis());
+  char* class_name = GetPhpClassname(
+      upb_EnumDef_File(intern->enumdef),
+      upb_EnumDef_FullName(intern->enumdef),
+      /* use_nested= */ false
+  );
+
+  RETURN_STRING(class_name);
+  free(class_name);
+}
+
+/*
+ * EnumDescriptor::getFullName()
+ *
+ * Returns full protobuf message name
+ */
+PHP_METHOD(EnumDescriptor, getFullName) {
+  EnumDescriptor* intern = (EnumDescriptor*)Z_OBJ_P(getThis());
+  const char* full_name = upb_EnumDef_FullName(intern->enumdef);
+
+  RETURN_STRING(full_name);
+}
+
+/*
  * EnumDescriptor::getValue()
  *
  * Returns an EnumValueDescriptor for this index. Note: we are not looking
@@ -206,6 +235,8 @@ PHP_METHOD(EnumDescriptor, getPublicDescriptor) { RETURN_COPY(getThis()); }
 
 // clang-format off
 static zend_function_entry EnumDescriptor_methods[] = {
+  PHP_ME(EnumDescriptor, getClass, arginfo_void, ZEND_ACC_PUBLIC)
+  PHP_ME(EnumDescriptor, getFullName, arginfo_void, ZEND_ACC_PUBLIC)
   PHP_ME(EnumDescriptor, getPublicDescriptor, arginfo_void, ZEND_ACC_PUBLIC)
   PHP_ME(EnumDescriptor, getValueCount, arginfo_void, ZEND_ACC_PUBLIC)
   PHP_ME(EnumDescriptor, getValue, arginfo_getByIndex, ZEND_ACC_PUBLIC)
@@ -1082,7 +1113,6 @@ void Def_ModuleInit() {
   INIT_CLASS_ENTRY(tmp_ce, "Google\\Protobuf\\OneofDescriptor",
                    OneofDescriptor_methods);
   OneofDescriptor_class_entry = zend_register_internal_class(&tmp_ce);
-  OneofDescriptor_class_entry->ce_flags |= ZEND_ACC_FINAL;
   OneofDescriptor_class_entry->create_object = CreateHandler_ReturnNull;
   h = &OneofDescriptor_object_handlers;
   memcpy(h, &std_object_handlers, sizeof(zend_object_handlers));
@@ -1091,7 +1121,6 @@ void Def_ModuleInit() {
   INIT_CLASS_ENTRY(tmp_ce, "Google\\Protobuf\\EnumValueDescriptor",
                    EnumValueDescriptor_methods);
   EnumValueDescriptor_class_entry = zend_register_internal_class(&tmp_ce);
-  EnumValueDescriptor_class_entry->ce_flags |= ZEND_ACC_FINAL;
   EnumValueDescriptor_class_entry->create_object = CreateHandler_ReturnNull;
   h = &EnumValueDescriptor_object_handlers;
   memcpy(h, &std_object_handlers, sizeof(zend_object_handlers));
@@ -1099,7 +1128,6 @@ void Def_ModuleInit() {
   INIT_CLASS_ENTRY(tmp_ce, "Google\\Protobuf\\EnumDescriptor",
                    EnumDescriptor_methods);
   EnumDescriptor_class_entry = zend_register_internal_class(&tmp_ce);
-  EnumDescriptor_class_entry->ce_flags |= ZEND_ACC_FINAL;
   EnumDescriptor_class_entry->create_object = CreateHandler_ReturnNull;
   h = &EnumDescriptor_object_handlers;
   memcpy(h, &std_object_handlers, sizeof(zend_object_handlers));
@@ -1108,7 +1136,6 @@ void Def_ModuleInit() {
   INIT_CLASS_ENTRY(tmp_ce, "Google\\Protobuf\\Descriptor", Descriptor_methods);
 
   Descriptor_class_entry = zend_register_internal_class(&tmp_ce);
-  Descriptor_class_entry->ce_flags |= ZEND_ACC_FINAL;
   Descriptor_class_entry->create_object = CreateHandler_ReturnNull;
   h = &Descriptor_object_handlers;
   memcpy(h, &std_object_handlers, sizeof(zend_object_handlers));
@@ -1117,7 +1144,6 @@ void Def_ModuleInit() {
   INIT_CLASS_ENTRY(tmp_ce, "Google\\Protobuf\\FieldDescriptor",
                    FieldDescriptor_methods);
   FieldDescriptor_class_entry = zend_register_internal_class(&tmp_ce);
-  FieldDescriptor_class_entry->ce_flags |= ZEND_ACC_FINAL;
   FieldDescriptor_class_entry->create_object = CreateHandler_ReturnNull;
   h = &FieldDescriptor_object_handlers;
   memcpy(h, &std_object_handlers, sizeof(zend_object_handlers));
@@ -1126,7 +1152,6 @@ void Def_ModuleInit() {
   INIT_CLASS_ENTRY(tmp_ce, "Google\\Protobuf\\DescriptorPool",
                    DescriptorPool_methods);
   DescriptorPool_class_entry = zend_register_internal_class(&tmp_ce);
-  DescriptorPool_class_entry->ce_flags |= ZEND_ACC_FINAL;
   DescriptorPool_class_entry->create_object = CreateHandler_ReturnNull;
   h = &DescriptorPool_object_handlers;
   memcpy(h, &std_object_handlers, sizeof(zend_object_handlers));

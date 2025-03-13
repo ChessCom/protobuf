@@ -60,7 +60,6 @@ void Arena_ModuleInit() {
   INIT_CLASS_ENTRY(tmp_ce, "Google\\Protobuf\\Internal\\Arena", Arena_methods);
   Arena_class_entry = zend_register_internal_class(&tmp_ce);
   Arena_class_entry->create_object = Arena_Create;
-  Arena_class_entry->ce_flags |= ZEND_ACC_FINAL;
 
   memcpy(&Arena_object_handlers, &std_object_handlers,
          sizeof(zend_object_handlers));

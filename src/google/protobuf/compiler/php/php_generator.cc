@@ -1886,7 +1886,6 @@ void GenerateCMessage(const Descriptor* message, io::Printer* printer) {
       "                   $c_name$_phpmethods);\n"
       "\n"
       "  $c_name$_ce = zend_register_internal_class(&tmp_ce);\n"
-      "  $c_name$_ce->ce_flags |= ZEND_ACC_FINAL;\n"
       "  $c_name$_ce->create_object = Message_create;\n"
       "  zend_do_inheritance($c_name$_ce, message_ce);\n"
       "}\n"

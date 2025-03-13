@@ -649,7 +649,6 @@ void Map_ModuleInit() {
   MapField_class_entry = zend_register_internal_class(&tmp_ce);
   zend_class_implements(MapField_class_entry, 3, zend_ce_arrayaccess,
                         zend_ce_aggregate, zend_ce_countable);
-  MapField_class_entry->ce_flags |= ZEND_ACC_FINAL;
   MapField_class_entry->create_object = MapField_create;
 
   h = &MapField_object_handlers;
@@ -665,8 +664,6 @@ void Map_ModuleInit() {
 
   MapFieldIter_class_entry = zend_register_internal_class(&tmp_ce);
   zend_class_implements(MapFieldIter_class_entry, 1, zend_ce_iterator);
-  MapFieldIter_class_entry->ce_flags |= ZEND_ACC_FINAL;
-  MapFieldIter_class_entry->ce_flags |= ZEND_ACC_FINAL;
   MapFieldIter_class_entry->create_object = MapFieldIter_create;
 
   h = &MapFieldIter_object_handlers;

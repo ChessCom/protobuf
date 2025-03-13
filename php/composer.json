@@ -34,12 +34,12 @@
     "generate_class_metadata_php": [
       "@generate_test_protos",
       "mkdir -p tmp/class-metadata",
-      "php bin/class-metadata.php -s src -o tmp/class-metadata/well-known-types-php.json"
+      "php bin/class-metadata.php -s src -o tmp/class-metadata/src-php.json"
     ],
     "generate_class_metadata_ext": [
       "@generate_test_protos",
       "mkdir -p tmp/class-metadata",
-      "php -dextension=ext/google/protobuf/modules/protobuf.so bin/class-metadata.php -s src -o tmp/class-metadata/well-known-types-ext.json"
+      "php -dextension=ext/google/protobuf/modules/protobuf.so bin/class-metadata.php -s src -o tmp/class-metadata/src-ext.json"
     ],
     "phpunit": [
       "vendor/bin/phpunit"
