@@ -131,7 +131,6 @@ static void google_protobuf_Any_ModuleInit() {
                    google_protobuf_Any_phpmethods);
 
   google_protobuf_Any_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Any_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Any_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Any_ce, message_ce);
 }
@@ -389,7 +388,6 @@ static void google_protobuf_Api_ModuleInit() {
                    google_protobuf_Api_phpmethods);
 
   google_protobuf_Api_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Api_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Api_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Api_ce, message_ce);
 }
@@ -583,7 +581,6 @@ static void google_protobuf_Method_ModuleInit() {
                    google_protobuf_Method_phpmethods);
 
   google_protobuf_Method_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Method_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Method_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Method_ce, message_ce);
 }
@@ -657,7 +654,6 @@ static void google_protobuf_Mixin_ModuleInit() {
                    google_protobuf_Mixin_phpmethods);
 
   google_protobuf_Mixin_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Mixin_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Mixin_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Mixin_ce, message_ce);
 }
@@ -772,7 +768,6 @@ static void google_protobuf_Duration_ModuleInit() {
                    google_protobuf_Duration_phpmethods);
 
   google_protobuf_Duration_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Duration_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Duration_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Duration_ce, message_ce);
 }
@@ -837,7 +832,6 @@ static void google_protobuf_Empty_ModuleInit() {
                    google_protobuf_Empty_phpmethods);
 
   google_protobuf_Empty_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Empty_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Empty_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Empty_ce, message_ce);
 }
@@ -927,7 +921,6 @@ static void google_protobuf_FieldMask_ModuleInit() {
                    google_protobuf_FieldMask_phpmethods);
 
   google_protobuf_FieldMask_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_FieldMask_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_FieldMask_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_FieldMask_ce, message_ce);
 }
@@ -1018,7 +1011,6 @@ static void google_protobuf_SourceContext_ModuleInit() {
                    google_protobuf_SourceContext_phpmethods);
 
   google_protobuf_SourceContext_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_SourceContext_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_SourceContext_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_SourceContext_ce, message_ce);
 }
@@ -1125,7 +1117,6 @@ static void google_protobuf_Struct_ModuleInit() {
                    google_protobuf_Struct_phpmethods);
 
   google_protobuf_Struct_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Struct_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Struct_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Struct_ce, message_ce);
 }
@@ -1199,7 +1190,6 @@ static void google_protobuf_Struct_FieldsEntry_ModuleInit() {
                    google_protobuf_Struct_FieldsEntry_phpmethods);
 
   google_protobuf_Struct_FieldsEntry_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Struct_FieldsEntry_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Struct_FieldsEntry_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Struct_FieldsEntry_ce, message_ce);
 }
@@ -1378,7 +1368,6 @@ static void google_protobuf_Value_ModuleInit() {
                    google_protobuf_Value_phpmethods);
 
   google_protobuf_Value_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Value_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Value_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Value_ce, message_ce);
 }
@@ -1428,7 +1417,6 @@ static void google_protobuf_ListValue_ModuleInit() {
                    google_protobuf_ListValue_phpmethods);
 
   google_protobuf_ListValue_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_ListValue_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_ListValue_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_ListValue_ce, message_ce);
 }
@@ -1613,7 +1601,6 @@ static void google_protobuf_Timestamp_ModuleInit() {
                    google_protobuf_Timestamp_phpmethods);
 
   google_protobuf_Timestamp_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Timestamp_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Timestamp_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Timestamp_ce, message_ce);
 }
@@ -1906,7 +1893,6 @@ static void google_protobuf_Type_ModuleInit() {
                    google_protobuf_Type_phpmethods);
 
   google_protobuf_Type_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Type_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Type_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Type_ce, message_ce);
 }
@@ -2172,7 +2158,6 @@ static void google_protobuf_Field_ModuleInit() {
                    google_protobuf_Field_phpmethods);
 
   google_protobuf_Field_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Field_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Field_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Field_ce, message_ce);
 }
@@ -2512,7 +2497,6 @@ static void google_protobuf_Enum_ModuleInit() {
                    google_protobuf_Enum_phpmethods);
 
   google_protobuf_Enum_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Enum_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Enum_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Enum_ce, message_ce);
 }
@@ -2610,7 +2594,6 @@ static void google_protobuf_EnumValue_ModuleInit() {
                    google_protobuf_EnumValue_phpmethods);
 
   google_protobuf_EnumValue_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_EnumValue_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_EnumValue_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_EnumValue_ce, message_ce);
 }
@@ -2684,7 +2667,6 @@ static void google_protobuf_Option_ModuleInit() {
                    google_protobuf_Option_phpmethods);
 
   google_protobuf_Option_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Option_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Option_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Option_ce, message_ce);
 }
@@ -2852,7 +2834,6 @@ static void google_protobuf_DoubleValue_ModuleInit() {
                    google_protobuf_DoubleValue_phpmethods);
 
   google_protobuf_DoubleValue_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_DoubleValue_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_DoubleValue_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_DoubleValue_ce, message_ce);
 }
@@ -2902,7 +2883,6 @@ static void google_protobuf_FloatValue_ModuleInit() {
                    google_protobuf_FloatValue_phpmethods);
 
   google_protobuf_FloatValue_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_FloatValue_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_FloatValue_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_FloatValue_ce, message_ce);
 }
@@ -2952,7 +2932,6 @@ static void google_protobuf_Int64Value_ModuleInit() {
                    google_protobuf_Int64Value_phpmethods);
 
   google_protobuf_Int64Value_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Int64Value_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Int64Value_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Int64Value_ce, message_ce);
 }
@@ -3002,7 +2981,6 @@ static void google_protobuf_UInt64Value_ModuleInit() {
                    google_protobuf_UInt64Value_phpmethods);
 
   google_protobuf_UInt64Value_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_UInt64Value_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_UInt64Value_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_UInt64Value_ce, message_ce);
 }
@@ -3052,7 +3030,6 @@ static void google_protobuf_Int32Value_ModuleInit() {
                    google_protobuf_Int32Value_phpmethods);
 
   google_protobuf_Int32Value_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_Int32Value_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_Int32Value_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_Int32Value_ce, message_ce);
 }
@@ -3102,7 +3079,6 @@ static void google_protobuf_UInt32Value_ModuleInit() {
                    google_protobuf_UInt32Value_phpmethods);
 
   google_protobuf_UInt32Value_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_UInt32Value_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_UInt32Value_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_UInt32Value_ce, message_ce);
 }
@@ -3152,7 +3128,6 @@ static void google_protobuf_BoolValue_ModuleInit() {
                    google_protobuf_BoolValue_phpmethods);
 
   google_protobuf_BoolValue_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_BoolValue_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_BoolValue_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_BoolValue_ce, message_ce);
 }
@@ -3202,7 +3177,6 @@ static void google_protobuf_StringValue_ModuleInit() {
                    google_protobuf_StringValue_phpmethods);
 
   google_protobuf_StringValue_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_StringValue_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_StringValue_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_StringValue_ce, message_ce);
 }
@@ -3252,7 +3226,6 @@ static void google_protobuf_BytesValue_ModuleInit() {
                    google_protobuf_BytesValue_phpmethods);
 
   google_protobuf_BytesValue_ce = zend_register_internal_class(&tmp_ce);
-  google_protobuf_BytesValue_ce->ce_flags |= ZEND_ACC_FINAL;
   google_protobuf_BytesValue_ce->create_object = Message_create;
   zend_do_inheritance(google_protobuf_BytesValue_ce, message_ce);
 }

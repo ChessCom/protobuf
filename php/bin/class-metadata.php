@@ -61,8 +61,7 @@ function extractClassMetadata($className): array
         foreach ($parameters as $parameter) {
             $methodMetadata['parameters'][] = [
                 'name' => $parameter->getName(),
-                'optional' => $parameter->isOptional(),
-                'variadic' => $parameter->isVariadic(),
+                'is_optional' => $parameter->isOptional(),
                 'type' => $parameter->hasType() ? (string) $parameter->getType() : null,
             ];
         }

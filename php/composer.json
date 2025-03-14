@@ -41,6 +41,10 @@
       "mkdir -p tmp/class-metadata",
       "php -dextension=ext/google/protobuf/modules/protobuf.so bin/class-metadata.php -s src -o tmp/class-metadata/src-ext.json"
     ],
+    "generate_class_metadata": [
+      "@generate_class_metadata_php",
+      "@generate_class_metadata_ext"
+    ],
     "phpunit": [
       "vendor/bin/phpunit"
     ],
