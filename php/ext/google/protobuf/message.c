@@ -98,7 +98,7 @@ static const upb_FieldDef* lookup_field(Message* msg, zend_string* member) {
   const upb_MessageDef* m = msg->desc->msgdef;
   const upb_FieldDef* f = upb_MessageDef_FindFieldByNameWithSize(
       m, ZSTR_VAL(member), ZSTR_LEN(member));
-  
+
   if (!f) {
     return NULL;
   }
@@ -533,6 +533,14 @@ bool Message_InitFromPhp(upb_Message* msg, const upb_MessageDef* m, zval* init,
     if (!f) {
       zend_throw_exception_ex(NULL, 0, "No such field %s", Z_STRVAL_P(&key));
       return false;
+    }
+
+    // Handle NULL optional field
+    if (Z_TYPE_P(val) == IS_NULL && upb_FieldDef_IsOptional(f)) {
+      upb_Message_ClearFieldByDef(msg, f);
+      zend_hash_move_forward_ex(table, &pos);
+      zval_dtor(&key);
+      continue;
     }
 
     if (upb_FieldDef_IsMap(f)) {
