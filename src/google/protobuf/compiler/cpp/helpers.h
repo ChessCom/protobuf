@@ -487,6 +487,10 @@ bool HasRepeatedFields(const FileDescriptor* file);
 // does not include extensions, since ctype is ignored for extensions.
 bool HasStringPieceFields(const FileDescriptor* file, const Options& options);
 
+// Does the file have any string/bytes fields?.  This excludes cord and string
+// piece fields.
+bool HasRegularStringFields(const FileDescriptor* file, const Options& options);
+
 // Does the file have any string/bytes fields with ctype=CORD? This does not
 // include extensions, since ctype is ignored for extensions.
 bool HasCordFields(const FileDescriptor* file, const Options& options);
@@ -727,6 +731,14 @@ void ListAllFields(const Descriptor* d,
                    std::vector<const FieldDescriptor*>* fields);
 void ListAllFields(const FileDescriptor* d,
                    std::vector<const FieldDescriptor*>* fields);
+
+// Collects all fields from the given descriptor, excluding weak fields and
+// fields in oneofs.
+//
+// Returns the number of weak fields.
+int CollectFieldsExcludingWeakAndOneof(
+    const Descriptor* d, const Options& options,
+    std::vector<const FieldDescriptor*>& fields);
 
 template <bool do_nested_types, class T>
 void ForEachField(const Descriptor* d, T&& func) {
