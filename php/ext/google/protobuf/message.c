@@ -381,6 +381,34 @@ static zval* Message_write_property(zend_object* obj, zend_string* member,
 }
 
 /**
+ * Message_serialize()
+ *
+ * Handler for PHP's serialize() function, which we do not support.
+ */
+static int Message_serialize(zval* object, unsigned char** buffer, size_t* buf_len, zend_serialize_data* data) {
+  zend_throw_exception_ex(
+      NULL, 0,
+      "Protobuf messages do not support PHP's native serialize() function. "
+      "Use serializeToString() or serializeToJsonString() instead.");
+  return FAILURE;
+}
+
+/**
+ * Message_unserialize()
+ *
+ * Handler for PHP's unserialize() function, which we do not support.
+ * This should never be called, since PHP will validate the serialized data before invoking
+ * this function, but we implement just it to be safe.
+ */
+static int Message_unserialize(zval* object, zend_class_entry* ce, const unsigned char* buf, size_t buf_len, zend_unserialize_data* data) {
+  zend_throw_exception_ex(
+      NULL, 0,
+      "Protobuf messages do not support PHP's native unserialize() function. "
+      "Use serializeToString() or serializeToJsonString() instead.");
+  return FAILURE;
+}
+
+/**
  * Message_get_property_ptr_ptr()
  *
  * Object handler for the get_property_ptr_ptr event in PHP. This returns a
@@ -1415,6 +1443,10 @@ void Message_ModuleInit() {
 
   message_ce = zend_register_internal_class(&tmp_ce);
   message_ce->create_object = Message_create;
+
+  // Serialization not supported this is here only to prevent a seg fault
+  message_ce->serialize = Message_serialize;
+  message_ce->unserialize = Message_unserialize;
 
   memcpy(h, &std_object_handlers, sizeof(zend_object_handlers));
   h->dtor_obj = Message_dtor;
