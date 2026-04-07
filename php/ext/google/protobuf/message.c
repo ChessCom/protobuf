@@ -385,6 +385,25 @@ static zval* Message_get_property_ptr_ptr(zend_object* object,
   return NULL;  // We do not have a properties table.
 }
 
+static int Message_serialize(zval* object, unsigned char** buffer,
+                             size_t* buf_len, zend_serialize_data* data) {
+  zend_throw_exception_ex(
+      NULL, 0,
+      "Protobuf messages do not support PHP's native serialize() function. "
+      "Use serializeToString() or serializeToJsonString() instead.");
+  return FAILURE;
+}
+
+static int Message_unserialize(zval* object, zend_class_entry* ce,
+                               const unsigned char* buf, size_t buf_len,
+                               zend_unserialize_data* data) {
+  zend_throw_exception_ex(
+      NULL, 0,
+      "Protobuf messages do not support PHP's native unserialize() function. "
+      "Use serializeToString() or serializeToJsonString() instead.");
+  return FAILURE;
+}
+
 /**
  * Message_clone_obj()
  *
@@ -1410,6 +1429,8 @@ void Message_ModuleInit() {
 
   message_ce = zend_register_internal_class(&tmp_ce);
   message_ce->create_object = Message_create;
+  message_ce->serialize = Message_serialize;
+  message_ce->unserialize = Message_unserialize;
 
   memcpy(h, &std_object_handlers, sizeof(zend_object_handlers));
   h->dtor_obj = Message_dtor;
