@@ -85,11 +85,11 @@ static void Message_dtor(zend_object* obj) {
 }
 
 /**
- * get_field()
+ * lookup_field()
  *
  * Helper function to look up a field given a member name (as a string).
  */
-static const upb_FieldDef* get_field(Message* msg, zend_string* member) {
+static const upb_FieldDef* lookup_field(Message* msg, zend_string* member) {
   if (!msg || !msg->desc || !msg->desc->msgdef) {
     zend_throw_exception_ex(NULL, 0,
                             "Couldn't find descriptor. "
@@ -100,8 +100,18 @@ static const upb_FieldDef* get_field(Message* msg, zend_string* member) {
   }
 
   const upb_MessageDef* m = msg->desc->msgdef;
-  const upb_FieldDef* f = upb_MessageDef_FindFieldByNameWithSize(
-      m, ZSTR_VAL(member), ZSTR_LEN(member));
+
+  return upb_MessageDef_FindFieldByNameWithSize(m, ZSTR_VAL(member),
+                                                ZSTR_LEN(member));
+}
+
+/**
+ * get_field()
+ *
+ * Helper function to get a field given a member name (as a string).
+ */
+static const upb_FieldDef* get_field(Message* msg, zend_string* member) {
+  const upb_FieldDef* f = lookup_field(msg, member);
 
   if (!f) {
     zend_throw_exception_ex(NULL, 0, "No such property %s.",
@@ -250,15 +260,11 @@ static int Message_compare_objects(zval* m1, zval* m2) {
 static int Message_has_property(zend_object* obj, zend_string* member,
                                 int has_set_exists, void** cache_slot) {
   Message* intern = (Message*)obj;
-  const upb_FieldDef* f = get_field(intern, member);
+  const upb_FieldDef* f = lookup_field(intern, member);
 
   if (!f) return 0;
 
   if (!upb_FieldDef_HasPresence(f)) {
-    zend_throw_exception_ex(
-        NULL, 0,
-        "Cannot call isset() on field %s which does not have presence.",
-        upb_FieldDef_Name(f));
     return 0;
   }
 
@@ -284,7 +290,7 @@ static int Message_has_property(zend_object* obj, zend_string* member,
 static void Message_unset_property(zend_object* obj, zend_string* member,
                                    void** cache_slot) {
   Message* intern = (Message*)obj;
-  const upb_FieldDef* f = get_field(intern, member);
+  const upb_FieldDef* f = lookup_field(intern, member);
 
   if (!f) return;
 
