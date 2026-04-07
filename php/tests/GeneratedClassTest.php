@@ -1781,6 +1781,15 @@ class GeneratedClassTest extends TestBase
 
     public function testConvertNullValueArrayConstructor()
     {
+        if (!extension_loaded('protobuf')) {
+            // In 5.x, generated PHP setters are typed. The pure-PHP array
+            // constructor routes through those setters, so null fails at the
+            // PHP typehint boundary before this old-message compatibility path
+            // can be exercised. Keep coverage for the C extension, which must
+            // remain compatible with messages generated before typed setters.
+            $this->markTestSkipped('This compatibility case is only testable with the C extension on 5.x');
+        }
+
         $m = new TestMessage([
             'optional_bool' => null,
             'optional_bytes' => null,
