@@ -1738,6 +1738,19 @@ class GeneratedClassTest extends TestBase
         $this->assertCount(2, $m->getRepeatedMessage());
     }
 
+    public function testConvertNullValueArrayConstructor()
+    {
+        $m = new TestMessage([
+            'optional_bool' => null,
+            'optional_bytes' => null,
+            'optional_string' => null,
+        ]);
+
+        $this->assertSame(false, $m->getOptionalBool());
+        $this->assertSame('', $m->getOptionalString());
+        $this->assertSame('', $m->getOptionalBytes());
+    }
+
     #########################################################
     # Test clone.
     #########################################################
