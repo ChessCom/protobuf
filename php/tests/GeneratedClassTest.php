@@ -2014,6 +2014,25 @@ class GeneratedClassTest extends TestBase
         new TestMessage(['optional_int32' => $this->throwIntendedException()]);
     }
 
+    public function testSerializeDoesNotSegfault()
+    {
+        if (!extension_loaded('protobuf')) {
+            $this->markTestSkipped('PHP Protobuf extension is not loaded');
+        }
+
+        $msg = new TestMessage([
+            'optional_string' => 'Hello, World!',
+        ]);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(
+            "Protobuf messages do not support PHP's native serialize() function. " .
+            'Use serializeToString() or serializeToJsonString() instead.'
+        );
+
+        serialize($msg);
+    }
+
     public function testNoExceptionWithVarDump()
     {
         $m = new Sub(['a' => 1]);
