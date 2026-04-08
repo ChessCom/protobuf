@@ -41,6 +41,38 @@ class GeneratedClassTest extends TestBase
         $this->assertSame(1, $m->getOptionalInt32());
     }
 
+    public function testIsset()
+    {
+        $message = new TestMessage();
+
+        $this->assertTrue(property_exists(TestMessage::class, 'optional_string'));
+        $this->assertTrue(property_exists(TestMessage::class, 'repeated_int32'));
+        $this->assertTrue(property_exists(TestMessage::class, 'map_int32_int32'));
+        $this->assertTrue(property_exists($message, 'optional_string'));
+        $this->assertTrue(property_exists($message, 'repeated_int32'));
+        $this->assertTrue(property_exists($message, 'map_int32_int32'));
+        $this->assertFalse(isset($message->optional_string));
+        $this->assertFalse(isset($message->repeated_int32));
+        $this->assertFalse(isset($message->map_int32_int32));
+
+        $message->setOptionalString('bar');
+        $message->setRepeatedInt32([1, 2, 3]);
+        $message->setMapInt32Int32([1 => 2]);
+
+        $this->assertTrue(property_exists($message, 'optional_string'));
+        $this->assertTrue(property_exists($message, 'repeated_int32'));
+        $this->assertTrue(property_exists($message, 'map_int32_int32'));
+        $this->assertFalse(property_exists($message, 'foo'));
+
+        $this->assertFalse(isset($message->optional_string));
+        $this->assertFalse(isset($message->repeated_int32));
+        $this->assertFalse(isset($message->map_int32_int32));
+        $this->assertFalse(isset($message->foo));
+
+        unset($message->foo);
+        $this->assertTrue(true);
+    }
+
     #########################################################
     # Test int32 field.
     #########################################################
