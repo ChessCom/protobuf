@@ -230,6 +230,39 @@ class GeneratedClassTest extends TestBase
         $this->assertSame(0, $m->getTrueOptionalInt32());
     }
 
+    public function testConvertNullValueSetter()
+    {
+        $m = new TestMessage();
+
+        $m->setOptionalBool(null);
+        $m->setOptionalBytes(null);
+        $m->setOptionalString(null);
+        $m->setTrueOptionalBool(null);
+        $m->setTrueOptionalBytes(null);
+        $m->setTrueOptionalString(null);
+
+        $this->assertSame(false, $m->getOptionalBool());
+        $this->assertSame('', $m->getOptionalString());
+        $this->assertSame('', $m->getOptionalBytes());
+
+        $this->assertSame(false, $m->getTrueOptionalBool());
+        $this->assertSame('', $m->getTrueOptionalString());
+        $this->assertSame('', $m->getTrueOptionalBytes());
+    }
+
+    public function testConvertNullValueArrayConstructor()
+    {
+        $m = new TestMessage([
+            'optional_bool' => null,
+            'optional_bytes' => null,
+            'optional_string' => null,
+        ]);
+
+        $this->assertSame(false, $m->getOptionalBool());
+        $this->assertSame('', $m->getOptionalString());
+        $this->assertSame('', $m->getOptionalBytes());
+    }
+
     #########################################################
     # Test uint32 field.
     #########################################################
