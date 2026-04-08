@@ -66,6 +66,7 @@ static zend_object* Message_create(zend_class_entry* class_type) {
   zend_object_std_init(&intern->std, class_type);
   intern->std.handlers = &message_object_handlers;
   intern->desc = NULL;
+  intern->msg = NULL;
   ZVAL_NULL(&intern->arena);
   return &intern->std;
 }
@@ -90,7 +91,7 @@ static void Message_dtor(zend_object* obj) {
  * Helper function to look up a field given a member name (as a string).
  */
 static const upb_FieldDef* lookup_field(Message* msg, zend_string* member) {
-  if (!msg || !msg->desc || !msg->desc->msgdef) {
+  if (!msg || !msg->desc || !msg->desc->msgdef || !msg->msg) {
     zend_throw_exception_ex(NULL, 0,
                             "Couldn't find descriptor. "
                             "The message constructor was likely bypassed, "
@@ -113,7 +114,7 @@ static const upb_FieldDef* lookup_field(Message* msg, zend_string* member) {
 static const upb_FieldDef* get_field(Message* msg, zend_string* member) {
   const upb_FieldDef* f = lookup_field(msg, member);
 
-  if (!f) {
+  if (!f && msg->desc) {
     zend_throw_exception_ex(NULL, 0, "No such property %s.",
                             ZSTR_VAL(msg->desc->class_entry->name));
   }
