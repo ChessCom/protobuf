@@ -27,6 +27,26 @@ class C extends \Google\Protobuf\Internal\Message {
     }
 }
 
+# This is not allowed, but we at least shouldn't crash.
+class TestMessageMockProxy extends TestMessage {
+    public $_proxy_data = null;
+
+    public function __construct($data = null) {
+        $this->_proxy_data = $data;
+        // bypass parent constructor
+    }
+}
+
+# This is not allowed, but we at least shouldn't crash.
+class SubMockProxy extends Sub {
+    public $_proxy_data = null;
+
+    public function __construct($data = null) {
+        $this->_proxy_data = $data;
+        // bypass parent constructor
+    }
+}
+
 class GeneratedClassTest extends TestBase
 {
 
@@ -2031,6 +2051,103 @@ class GeneratedClassTest extends TestBase
         );
 
         serialize($msg);
+    }
+
+    public function testNoSegfaultWithContructorBypass()
+    {
+        if (!extension_loaded('protobuf')) {
+            $this->markTestSkipped('PHP Protobuf extension is not loaded');
+        }
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(
+            "Couldn't find descriptor. " .
+            "The message constructor was likely bypassed, resulting in an uninitialized descriptor."
+        );
+
+        $m = new TestMessageMockProxy(['optional_int32' => 123]);
+        $m->getOptionalInt32();
+    }
+
+    public function testNoSegfaultWithContructorBypassClear()
+    {
+        if (!extension_loaded('protobuf')) {
+            $this->markTestSkipped('PHP Protobuf extension is not loaded');
+        }
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(
+            "Couldn't find descriptor. " .
+            "The message constructor was likely bypassed, resulting in an uninitialized descriptor."
+        );
+
+        $m = new TestMessageMockProxy(['optional_int32' => 123]);
+        $m->clear();
+    }
+
+    public function testNoSegfaultWithContructorBypassAsSubmessage()
+    {
+        if (!extension_loaded('protobuf')) {
+            $this->markTestSkipped('PHP Protobuf extension is not loaded');
+        }
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(
+            "Couldn't find descriptor. " .
+            "The message constructor was likely bypassed, resulting in an uninitialized descriptor."
+        );
+
+        $m = new TestMessage();
+        $m->setOptionalMessage(new SubMockProxy(['a' => 123]));
+    }
+
+    public function testNoSegfaultWithContructorBypassClone()
+    {
+        if (!extension_loaded('protobuf')) {
+            $this->markTestSkipped('PHP Protobuf extension is not loaded');
+        }
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(
+            "Couldn't find descriptor. " .
+            "The message constructor was likely bypassed, resulting in an uninitialized descriptor."
+        );
+
+        $m = new TestMessageMockProxy(['optional_int32' => 123]);
+        clone $m;
+    }
+
+    public function testNoSegfaultWithContructorBypassMergeFrom()
+    {
+        if (!extension_loaded('protobuf')) {
+            $this->markTestSkipped('PHP Protobuf extension is not loaded');
+        }
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(
+            "Couldn't find descriptor. " .
+            "The message constructor was likely bypassed, resulting in an uninitialized descriptor."
+        );
+
+        $m = new TestMessage();
+        $m->mergeFrom(new TestMessageMockProxy(['optional_int32' => 123]));
+    }
+
+    public function testNoSegfaultWithContructorBypassCompare()
+    {
+        if (!extension_loaded('protobuf')) {
+            $this->markTestSkipped('PHP Protobuf extension is not loaded');
+        }
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(
+            "Couldn't find descriptor. " .
+            "The message constructor was likely bypassed, resulting in an uninitialized descriptor."
+        );
+
+        $m = new TestMessageMockProxy(['optional_int32' => 123]);
+        $good = new TestMessage();
+        $m == $good;
     }
 
     public function testNoExceptionWithVarDump()
