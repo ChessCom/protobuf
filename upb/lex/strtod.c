@@ -25,22 +25,33 @@ static int GetLocaleRadix(char *data, size_t capacity) {
   UPB_ASSERT(temp[size - 1] == '5');
   UPB_ASSERT(size < capacity);
   temp[size - 1] = '\0';
-  strcpy(data, temp + 1);
+  memcpy(data, temp + 1, (size_t)(size - 1));
   return size - 2;
 }
 
 // Populates a string identical to *input except that the character pointed to
 // by pos (which should be '.') is replaced with the locale-specific radix.
 
-static void LocalizeRadix(const char *input, const char *pos, char *output) {
+static void LocalizeRadix(const char *input, const char *pos, char *output,
+                          size_t output_size) {
   const int len1 = pos - input;
 
   char radix[8];
   const int len2 = GetLocaleRadix(radix, sizeof(radix));
 
-  memcpy(output, input, len1);
-  memcpy(output + len1, radix, len2);
-  strcpy(output + len1 + len2, input + len1 + 1);
+  if (output_size == 0) return;
+  if (len1 < 0 || len2 < 0 ||
+      (size_t)len1 + (size_t)len2 + 1 > output_size) {
+    output[0] = '\0';
+    return;
+  }
+
+  memcpy(output, input, (size_t)len1);
+  memcpy(output + len1, radix, (size_t)len2);
+  size_t used = (size_t)len1 + (size_t)len2;
+  size_t rest_cap = output_size - used;
+  strncpy(output + used, input + len1 + 1, rest_cap - 1);
+  output[output_size - 1] = '\0';
 }
 
 double _upb_NoLocaleStrtod(const char *str, char **endptr) {
@@ -60,7 +71,7 @@ double _upb_NoLocaleStrtod(const char *str, char **endptr) {
   // try again.
 
   char localized[80];
-  LocalizeRadix(str, temp_endptr, localized);
+  LocalizeRadix(str, temp_endptr, localized, sizeof(localized));
   char *localized_endptr;
   result = strtod(localized, &localized_endptr);
   if ((localized_endptr - &localized[0]) > (temp_endptr - str)) {
