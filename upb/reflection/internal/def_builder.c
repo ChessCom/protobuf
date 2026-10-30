@@ -87,7 +87,7 @@ const char* _upb_DefBuilder_MakeFullName(upb_DefBuilder* ctx,
     // ret = prefix + '.' + name;
     size_t n = strlen(prefix);
     char* ret = _upb_DefBuilder_Alloc(ctx, n + name.size + 2);
-    strcpy(ret, prefix);
+    memcpy(ret, prefix, n);
     ret[n] = '.';
     memcpy(&ret[n + 1], name.data, name.size);
     ret[n + 1 + name.size] = '\0';
