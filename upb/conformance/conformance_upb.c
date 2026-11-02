@@ -133,8 +133,9 @@ bool parse_json(upb_Message* msg, const upb_MessageDef* m, const ctx* c) {
   } else {
     const char* inerr = upb_Status_ErrorMessage(&status);
     size_t len = strlen(inerr);
-    char* err = upb_Arena_Malloc(c->arena, len + 1);
-    memcpy(err, inerr, strlen(inerr));
+    size_t cap = len + 1;
+    char* err = upb_Arena_Malloc(c->arena, cap);
+    memcpy(err, inerr, cap - 1);
     err[len] = '\0';
     conformance_ConformanceResponse_set_parse_error(
         c->response, upb_StringView_FromString(err));
@@ -156,8 +157,9 @@ void serialize_json(const upb_Message* msg, const upb_MessageDef* m,
   if (len == (size_t)-1) {
     const char* inerr = upb_Status_ErrorMessage(&status);
     size_t len = strlen(inerr);
-    char* err = upb_Arena_Malloc(c->arena, len + 1);
-    memcpy(err, inerr, strlen(inerr));
+    size_t cap = len + 1;
+    char* err = upb_Arena_Malloc(c->arena, cap);
+    memcpy(err, inerr, cap - 1);
     err[len] = '\0';
     conformance_ConformanceResponse_set_serialize_error(
         c->response, upb_StringView_FromString(err));
