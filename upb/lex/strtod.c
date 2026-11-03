@@ -23,10 +23,14 @@ static int GetLocaleRadix(char *data, size_t capacity) {
   const int size = snprintf(temp, sizeof(temp), "%.1f", 1.5);
   UPB_ASSERT(temp[0] == '1');
   UPB_ASSERT(temp[size - 1] == '5');
-  UPB_ASSERT(size < capacity);
+  UPB_ASSERT(size >= 2);
+  if (capacity == 0) return 0;
   temp[size - 1] = '\0';
-  memcpy(data, temp + 1, (size_t)(size - 1));
-  return size - 2;
+  size_t n = (size_t)(size - 2);
+  if (n >= capacity) n = capacity - 1;
+  memcpy(data, temp + 1, n);
+  data[n] = '\0';
+  return (int)n;
 }
 
 // Populates a string identical to *input except that the character pointed to
@@ -50,8 +54,14 @@ static void LocalizeRadix(const char *input, const char *pos, char *output,
   memcpy(output + len1, radix, (size_t)len2);
   size_t used = (size_t)len1 + (size_t)len2;
   size_t rest_cap = output_size - used;
-  strncpy(output + used, input + len1 + 1, rest_cap - 1);
-  output[output_size - 1] = '\0';
+  if (rest_cap == 0) {
+    output[output_size - 1] = '\0';
+    return;
+  }
+  size_t rest_len = strlen(input + len1 + 1);
+  if (rest_len >= rest_cap) rest_len = rest_cap - 1;
+  memcpy(output + used, input + len1 + 1, rest_len);
+  output[used + rest_len] = '\0';
 }
 
 double _upb_NoLocaleStrtod(const char *str, char **endptr) {
