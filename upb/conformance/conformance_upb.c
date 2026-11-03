@@ -11,6 +11,7 @@
 
 #include <errno.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -132,11 +133,9 @@ bool parse_json(upb_Message* msg, const upb_MessageDef* m, const ctx* c) {
     return true;
   } else {
     const char* inerr = upb_Status_ErrorMessage(&status);
-    size_t len = strlen(inerr);
-    size_t cap = len + 1;
+    size_t cap = strlen(inerr) + 1;
     char* err = upb_Arena_Malloc(c->arena, cap);
-    memcpy(err, inerr, cap - 1);
-    err[len] = '\0';
+    snprintf(err, cap, "%s", inerr);
     conformance_ConformanceResponse_set_parse_error(
         c->response, upb_StringView_FromString(err));
     return false;
@@ -156,11 +155,9 @@ void serialize_json(const upb_Message* msg, const upb_MessageDef* m,
 
   if (len == (size_t)-1) {
     const char* inerr = upb_Status_ErrorMessage(&status);
-    size_t len = strlen(inerr);
-    size_t cap = len + 1;
+    size_t cap = strlen(inerr) + 1;
     char* err = upb_Arena_Malloc(c->arena, cap);
-    memcpy(err, inerr, cap - 1);
-    err[len] = '\0';
+    snprintf(err, cap, "%s", inerr);
     conformance_ConformanceResponse_set_serialize_error(
         c->response, upb_StringView_FromString(err));
     return;
