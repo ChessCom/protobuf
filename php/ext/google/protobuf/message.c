@@ -1229,8 +1229,7 @@ PHP_METHOD(google_protobuf_Any, pack) {
   full_name = upb_MessageDef_FullName(msg->desc->msgdef);
   type_url.size = strlen(TYPE_URL_PREFIX) + strlen(full_name);
   buf = upb_Arena_Malloc(arena, type_url.size + 1);
-  memcpy(buf, TYPE_URL_PREFIX, strlen(TYPE_URL_PREFIX));
-  memcpy(buf + strlen(TYPE_URL_PREFIX), full_name, strlen(full_name));
+  snprintf(buf, type_url.size + 1, "%s%s", TYPE_URL_PREFIX, full_name);
   type_url.data = buf;
   Message_setval(intern, "type_url", StringVal(type_url));
 }

@@ -86,11 +86,18 @@ const char* _upb_DefBuilder_MakeFullName(upb_DefBuilder* ctx,
   if (prefix) {
     // ret = prefix + '.' + name;
     size_t n = strlen(prefix);
-    char* ret = _upb_DefBuilder_Alloc(ctx, n + name.size + 2);
-    strcpy(ret, prefix);
-    ret[n] = '.';
-    memcpy(&ret[n + 1], name.data, name.size);
-    ret[n + 1 + name.size] = '\0';
+    size_t cap = n + name.size + 2;
+    char* ret = _upb_DefBuilder_Alloc(ctx, cap);
+    size_t prefix_n = n;
+    if (prefix_n >= cap) prefix_n = cap - 1;
+    memcpy(ret, prefix, prefix_n);
+    if (prefix_n + 1 + name.size >= cap) {
+      ret[cap - 1] = '\0';
+      return ret;
+    }
+    ret[prefix_n] = '.';
+    memcpy(&ret[prefix_n + 1], name.data, name.size);
+    ret[prefix_n + 1 + name.size] = '\0';
     return ret;
   } else {
     char* ret = upb_strdup2(name.data, name.size, ctx->arena);

@@ -10,6 +10,8 @@
 #include "google/protobuf/compiler/subprocess.h"
 
 #include <algorithm>
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <string>
 
@@ -290,9 +292,10 @@ Subprocess::~Subprocess() {
 
 namespace {
 char* portable_strdup(const char* s) {
-  char* ns = (char*)malloc(strlen(s) + 1);
+  const size_t n = strlen(s) + 1;
+  char* ns = (char*)malloc(n);
   if (ns != nullptr) {
-    strcpy(ns, s);
+    snprintf(ns, n, "%s", s);
   }
   return ns;
 }
