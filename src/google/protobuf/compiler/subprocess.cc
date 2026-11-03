@@ -10,6 +10,8 @@
 #include "google/protobuf/compiler/subprocess.h"
 
 #include <algorithm>
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <string>
 
@@ -293,7 +295,7 @@ char* portable_strdup(const char* s) {
   const size_t n = strlen(s) + 1;
   char* ns = (char*)malloc(n);
   if (ns != nullptr) {
-    memcpy(ns, s, n);
+    snprintf(ns, n, "%s", s);
   }
   return ns;
 }
